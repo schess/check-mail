@@ -8,7 +8,10 @@ public class Settings
 {
     public string EwsUrl { get; set; } = string.Empty;   // например https://mail.cit.gov.ru/EWS/Exchange.asmx
     public string Email { get; set; } = string.Empty;      // почтовый ящик пользователя
-    public bool UseDefaultCredentials { get; set; } = true; // использовать учётку текущего пользователя Windows
+    public string Username { get; set; } = string.Empty;   // логин для аутентификации
+    public string Password { get; set; } = string.Empty;   // пароль для аутентификации
+    public string Domain { get; set; } = string.Empty;     // домен (опционально)
+    public bool UseDefaultCredentials { get; set; } = false; // использовать учётку текущего пользователя Windows
     public int CheckIntervalSeconds { get; set; } = 300;   // по умолчанию каждые 5 минут
     public bool CheckAllFolders { get; set; } = true;      // проверять все папки ящика
     public bool RunAtStartup { get; set; } = false;        // автозапуск вместе с Windows

@@ -25,15 +25,23 @@
         <!-- Форма настроек -->
         <StackPanel Grid.Row="1" Margin="0,0,0,12">
 
-            <TextBlock Text="Адрес сервера Exchange (EWS) или hostname:"/>
-            <TextBox x:Name="EwsUrlBox" Margin="0,4,0,10"
-                     ToolTip="Например: https://mail.cit.gov.ru /EWS/Exchange.asmx"/>
-
             <TextBlock Text="E-mail почтового ящика:"/>
             <TextBox x:Name="EmailBox" Margin="0,4,0,10"/>
 
-            <TextBlock Text="Аутентификация: Windows (Kerberos/NTLM)" 
-                       Foreground="#FF666666" FontSize="11" Margin="0,0,0,10"/>
+            <TextBlock Text="Аутентификация:"/>
+            <ComboBox x:Name="AuthCombo" Margin="0,4,0,10" SelectedIndex="0">
+                <ComboBoxItem Content="Логин/пароль"/>
+                <ComboBoxItem Content="Windows (Kerberos/NTLM)"/>
+            </ComboBox>
+
+            <TextBlock Text="Логин (если отличается от e-mail):"/>
+            <TextBox x:Name="UsernameBox" Margin="0,4,0,10"/>
+
+            <TextBlock Text="Пароль:"/>
+            <PasswordBox x:Name="PasswordBox" Margin="0,4,0,10"/>
+
+            <TextBlock Text="Домен (необязательно):"/>
+            <TextBox x:Name="DomainBox" Margin="0,4,0,10"/>
 
             <TextBlock Text="Интервал проверки (минут):"/>
             <ComboBox x:Name="IntervalCombo" Margin="0,4,0,12">

@@ -21,8 +21,11 @@ public partial class MainWindow : Window
         _app = app;
 
         // Заполняем форму из настроек
-        EwsUrlBox.Text = settings.EwsUrl;
         EmailBox.Text = settings.Email;
+        UsernameBox.Text = settings.Username;
+        PasswordBox.Password = settings.Password;
+        DomainBox.Text = settings.Domain;
+        AuthCombo.SelectedIndex = settings.UseDefaultCredentials ? 1 : 0;
         AllFoldersCheck.IsChecked = settings.CheckAllFolders;
         StartupCheck.IsChecked = settings.RunAtStartup;
 
@@ -42,9 +45,11 @@ public partial class MainWindow : Window
 
     private void SaveSettingsFromUi()
     {
-        _settings.EwsUrl = EwsUrlBox.Text.Trim();
         _settings.Email = EmailBox.Text.Trim();
-        _settings.UseDefaultCredentials = true; // Windows-аутентификация (Kerberos/NTLM)
+        _settings.Username = UsernameBox.Text.Trim();
+        _settings.Password = PasswordBox.Password;
+        _settings.Domain = DomainBox.Text.Trim();
+        _settings.UseDefaultCredentials = AuthCombo.SelectedIndex == 1;
         _settings.CheckAllFolders = AllFoldersCheck.IsChecked == true;
         _settings.RunAtStartup = StartupCheck.IsChecked == true;
         if (IntervalCombo.SelectedItem is ComboBoxItem item &&
