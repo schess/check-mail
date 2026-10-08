@@ -32,7 +32,16 @@ public class MailChecker
         var service = new ExchangeService(ExchangeVersion.Exchange2013_SP1);
 
         // Windows-аутентификация (Kerberos/NTLM) — как в Outlook
+        // Используем кэшированные учётные данные Windows (те, что введены при входе в Windows)
         service.UseDefaultCredentials = true;
+
+        // Для работы Windows-аутентификации на .NET 8 нужно явно указать,
+        // что используются учётные данные текущего пользователя Windows
+        service.Credentials = new System.Net.NetworkCredential(
+            System.Security.Principal.WindowsIdentity.GetCurrent().Name,
+            string.Empty,
+            string.Empty
+        );
 
         if (!string.IsNullOrEmpty(s.EwsUrl))
         {
