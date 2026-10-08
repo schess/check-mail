@@ -21,6 +21,7 @@ public partial class MainWindow : Window
         _app = app;
 
         // Заполняем форму из настроек
+        EwsUrlBox.Text = settings.EwsUrl;
         EmailBox.Text = settings.Email;
         UsernameBox.Text = settings.Username;
         PasswordBox.Password = settings.Password;
@@ -45,6 +46,7 @@ public partial class MainWindow : Window
 
     private void SaveSettingsFromUi()
     {
+        _settings.EwsUrl = EwsUrlBox.Text.Trim();
         _settings.Email = EmailBox.Text.Trim();
         _settings.Username = UsernameBox.Text.Trim();
         _settings.Password = PasswordBox.Password;

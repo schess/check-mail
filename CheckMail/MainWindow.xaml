@@ -25,6 +25,9 @@
         <!-- Форма настроек -->
         <StackPanel Grid.Row="1" Margin="0,0,0,12">
 
+            <TextBlock Text="EWS URL (например: https://mail.cit.gov.ru/EWS/Exchange.asmx):"/>
+            <TextBox x:Name="EwsUrlBox" Margin="0,4,0,10"/>
+
             <TextBlock Text="E-mail почтового ящика:"/>
             <TextBox x:Name="EmailBox" Margin="0,4,0,10"/>
 

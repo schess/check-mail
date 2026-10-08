@@ -50,18 +50,15 @@ public class MailChecker
             }
         }
 
-        // Используем Autodiscover — как Outlook при первоначальной настройке
-        // Это автоматически находит сервер Exchange по адресу e-mail
-        // Запускаем в фоновом потоке, чтобы не блокировать UI
-        var autodiscoverTask = Task.Run(() =>
+        // Используем указанный EWS URL напрямую
+        if (!string.IsNullOrEmpty(s.EwsUrl))
         {
-            service.AutodiscoverUrl(s.Email, _ => true);
-        });
-
-        // Ждём завершения Autodiscover с таймаутом 30 секунд
-        if (!autodiscoverTask.Wait(TimeSpan.FromSeconds(30)))
+            service.Url = new Uri(s.EwsUrl);
+        }
+        else
         {
-            throw new TimeoutException("Autodiscover не удалось выполнить за 30 секунд");
+            // Если URL не указан — используем стандартный путь
+            service.Url = new Uri($"https://mail.cit.gov.ru/EWS/Exchange.asmx");
         }
 
         service.Timeout = 60000;
