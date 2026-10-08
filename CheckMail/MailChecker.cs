@@ -33,7 +33,6 @@ public class MailChecker
 
         // Windows-аутентификация (Kerberos/NTLM) — как в Outlook
         service.UseDefaultCredentials = true;
-        service.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
 
         if (!string.IsNullOrEmpty(s.EwsUrl))
         {
