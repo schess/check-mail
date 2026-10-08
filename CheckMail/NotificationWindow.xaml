@@ -1,0 +1,93 @@
+<Window x:Class="CheckMail.NotificationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Новая почта"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Width="380"
+        SizeToContent="Height"
+        WindowStartupLocation="Manual">
+
+    <Border x:Name="RootBorder"
+            CornerRadius="10"
+            BorderThickness="1"
+            BorderBrush="#FF3B6EA5"
+            Background="#FFF7F9FC"
+            Padding="14">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="18" ShadowDepth="3" Opacity="0.4"/>
+        </Border.Effect>
+        <StackPanel>
+            <!-- Заголовок -->
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left"
+                           FontWeight="Bold"
+                           Foreground="#FF2E5FA3"
+                           FontSize="14"
+                           Text="✉  Новая почта"/>
+                <TextBlock DockPanel.Dock="Right"
+                           Text="×"
+                           Cursor="Hand"
+                           FontSize="14"
+                           Foreground="#FF888888"
+                           ToolTip="Закрыть"
+                           MouseDown="Close_Click"/>
+            </DockPanel>
+
+            <Rectangle Height="1" Fill="#FFD0D0D0" Margin="0,6,0,10"/>
+
+            <!-- Папка -->
+            <TextBlock Text="Папка:"
+                       Foreground="#FF666666"
+                       FontSize="11"
+                       Margin="0,0,0,2"/>
+            <TextBlock x:Name="FolderText"
+                       FontWeight="SemiBold"
+                       Foreground="#FF333333"
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,8"/>
+
+            <!-- Тема -->
+            <TextBlock Text="Тема:"
+                       Foreground="#FF666666"
+                       FontSize="11"
+                       Margin="0,0,0,2"/>
+            <TextBlock x:Name="SubjectText"
+                       FontWeight="SemiBold"
+                       Foreground="#FF1A1A1A"
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,8"/>
+
+            <!-- Отправитель -->
+            <TextBlock x:Name="SenderText"
+                       Foreground="#FF777777"
+                       FontSize="11"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,10"/>
+
+            <!-- Кнопки -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="CloseBtn"
+                        Content="Закрыть"
+                        Width="80"
+                        Height="30"
+                        Margin="0,0,8,0"
+                        Click="Close_Click"/>
+                <Button x:Name="OpenOutlookBtn"
+                        Content="Открыть Outlook"
+                        Width="130"
+                        Height="30"
+                        Background="#FF2E5FA3"
+                        Foreground="White"
+                        FontWeight="SemiBold"
+                        Click="OpenOutlook_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

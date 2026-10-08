@@ -1,0 +1,12 @@
+# Build results
+bin/
+obj/
+*.user
+
+# Settings with credentials
+settings.json
+
+# IDE
+.vs/
+.idea/
+*.suo
