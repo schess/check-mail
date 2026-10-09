@@ -12,7 +12,12 @@ public class MailPollingService
     private readonly MailChecker _checker;
     private DispatcherTimer? _timer;
     private DateTime _lastRun;
+
+    /// <summary>Сервис включён (таймер создан и запущен).</summary>
     private bool _isRunning;
+
+    /// <summary>Сейчас выполняется проверка — защита от наложения прогонов.</summary>
+    private bool _isChecking;
 
     public event Action<NewMailInfo>? NewMailFound;
     public event Action<string>? StatusChanged;
@@ -42,7 +47,10 @@ public class MailPollingService
         };
         _timer.Tick += async (_, _) =>
         {
-            if (_isRunning) return; // не запускаем повторно, пока идёт проверка
+            // Пропускаем тик, только если предыдущая проверка ещё идёт.
+            // Проверять нужно _isChecking, а не _isRunning: последний остаётся
+            // true всё время работы таймера, и с ним тики не срабатывали бы.
+            if (_isChecking) return;
             await RunCheckAsync(settings);
         };
 
@@ -57,6 +65,7 @@ public class MailPollingService
     public void Stop()
     {
         _isRunning = false;
+        _isChecking = false;
         if (_timer != null)
         {
             _timer.Stop();
@@ -67,14 +76,25 @@ public class MailPollingService
 
     public async Task RunCheckAsync(Settings settings)
     {
-        if (_isRunning && _timer != null) _timer.Stop(); // приостановить таймер на время проверки
+        if (_isChecking) return;       // проверка уже идёт
+        _isChecking = true;
 
         try
         {
             _lastRun = DateTime.Now;
             StatusChanged?.Invoke($"Проверка почты... ({_lastRun:HH:mm:ss})");
-            await _checker.CheckForNewMailAsync(settings);
-            StatusChanged?.Invoke($"Проверка завершена. Следующая через {IntervalSeconds / 60} мин.");
+            int found = await _checker.CheckForNewMailAsync(settings);
+
+            // Показываем, сколько всего непрочитанных в ящике — это то, что
+            // интересует пользователя, а не только «сколько окон мы открыли».
+            var unread = _checker.LastUnreadTotal;
+            var where = string.IsNullOrEmpty(_checker.LastUnreadFolders)
+                ? ""
+                : $" ({_checker.LastUnreadFolders})";
+
+            StatusChanged?.Invoke(unread > 0
+                ? $"Непрочитанных в ящике: {unread}{where}. Показано новых: {found}. Следующая проверка через {IntervalSeconds / 60} мин."
+                : $"Непрочитанных нет. Следующая проверка через {IntervalSeconds / 60} мин.");
         }
         catch (Exception ex)
         {
@@ -84,7 +104,7 @@ public class MailPollingService
         }
         finally
         {
-            if (_isRunning && _timer != null) _timer.Start();
+            _isChecking = false;
         }
     }
 }

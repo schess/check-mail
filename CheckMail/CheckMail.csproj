@@ -9,10 +9,24 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>CheckMail</AssemblyName>
     <RootNamespace>CheckMail</RootNamespace>
+    <!-- Иконка приложения: встраивается в .exe (видна в проводнике, на панели задач, в Alt+Tab) -->
+    <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.18.1" />
+    <!-- Нужен для восстановления кириллицы в старых письмах (KOI8-R / Windows-1251) -->
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
     <PackageReference Include="Microsoft.Exchange.WebServices" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Иконка как ресурс сборки — для заголовков окон -->
+    <Resource Include="app.ico" />
+    <!-- …и копируется рядом с .exe — её читает иконка в трее -->
+    <Content Include="app.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

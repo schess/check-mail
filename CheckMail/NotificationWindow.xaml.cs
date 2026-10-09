@@ -18,10 +18,12 @@ public partial class NotificationWindow : Window
         SubjectText.Text = mail.Subject;
         SenderText.Text = string.IsNullOrEmpty(mail.Sender) ? "" : $"От: {mail.Sender}";
 
-        // Автозакрытие через 15 секунд, если пользователь не нажал кнопку
+        // Всплывающее уведомление живёт 30 секунд (раньше было 15 — информация
+        // успевала исчезнуть). Постоянные данные доступны в окне списка
+        // непрочитанных и в счётчике трея.
         _autoCloseTimer = new System.Windows.Threading.DispatcherTimer
         {
-            Interval = TimeSpan.FromSeconds(15)
+            Interval = TimeSpan.FromSeconds(30)
         };
         _autoCloseTimer.Tick += (_, _) => Close();
         _autoCloseTimer.Start();
@@ -47,13 +49,27 @@ public partial class NotificationWindow : Window
     public void PositionTopRight()
     {
         var wa = SystemParameters.WorkArea;
-        Left = wa.Right - ActualWidth - 12;
+        // До первой отрисовки ActualWidth == 0, поэтому берём Width из разметки
+        // (иначе окно уезжало за правый край экрана и было не видно).
+        var w = ActualWidth > 0 ? ActualWidth : (Width > 0 ? Width : 380);
+        var h = ActualHeight > 0 ? ActualHeight : (Height > 0 ? Height : 140);
+        Left = wa.Right - w - 12;
         Top = wa.Top + 12;
     }
 
     private void OpenOutlook_Click(object sender, RoutedEventArgs e)
     {
         OpenOutlook();
+        Close();
+    }
+
+    private void ShowAll_Click(object sender, RoutedEventArgs e)
+    {
+        // Открываем постоянное окно со списком непрочитанных
+        if (System.Windows.Application.Current is App app)
+        {
+            app.ShowUnreadList();
+        }
         Close();
     }
 
