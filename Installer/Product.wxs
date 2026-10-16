@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package
+    Name="CheckMail"
+    Manufacturer="FGAU"
+    Version="$(var.Version)"
+    UpgradeCode="B1111111-2222-3333-4444-555555555555"
+    Scope="perMachine"
+    Compressed="yes"
+    Language="1049"
+    Codepage="1251">
+
+    <SummaryInformation
+      Description="Установщик приложения CheckMail — проверка почты"
+      Manufacturer="FGAU"
+      Keywords="CheckMail;почта;IMAP;EWS"/>
+
+    <!-- Корневой каталог установки: C:\Program Files\FGAU\CheckMail\ -->
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="ManufacturerFolder" Name="FGAU">
+        <Directory Id="INSTALLFOLDER" Name="CheckMail" />
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Ярлык в меню "Пуск" -->
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="FGAU" />
+    </StandardDirectory>
+
+    <!-- Файлы приложения -->
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+
+      <!-- Главные файлы приложения -->
+      <Component Id="cm_exe">
+        <File Source="$(var.SourceDir)\CheckMail.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="cm_dll">
+        <File Source="$(var.SourceDir)\CheckMail.dll" />
+      </Component>
+      <Component Id="cm_deps">
+        <File Source="$(var.SourceDir)\CheckMail.deps.json" />
+      </Component>
+      <Component Id="cm_runtimeconfig">
+        <File Source="$(var.SourceDir)\CheckMail.runtimeconfig.json" />
+      </Component>
+
+      <!-- Библиотеки -->
+      <Component Id="cm_bouncycastle">
+        <File Source="$(var.SourceDir)\BouncyCastle.Cryptography.dll" />
+      </Component>
+      <Component Id="cm_mailkit">
+        <File Source="$(var.SourceDir)\MailKit.dll" />
+      </Component>
+      <Component Id="cm_bcl_crypto">
+        <File Source="$(var.SourceDir)\Microsoft.Bcl.Cryptography.dll" />
+      </Component>
+      <Component Id="cm_ews_auth">
+        <File Source="$(var.SourceDir)\Microsoft.Exchange.WebServices.Auth.dll" />
+      </Component>
+      <Component Id="cm_ews">
+        <File Source="$(var.SourceDir)\Microsoft.Exchange.WebServices.dll" />
+      </Component>
+      <Component Id="cm_mimekit">
+        <File Source="$(var.SourceDir)\MimeKit.dll" />
+      </Component>
+      <Component Id="cm_asn1">
+        <File Source="$(var.SourceDir)\System.Formats.Asn1.dll" />
+      </Component>
+      <Component Id="cm_pkcs" Guid="E5D8C7B6-A4B3-4C2D-8E1F-0A9B8C7D6E5F">
+        <File Source="$(var.SourceDir)\System.Security.Cryptography.Pkcs.dll" KeyPath="yes" />
+      </Component>
+
+      <!-- Иконка -->
+      <Component Id="cm_ico">
+        <File Source="$(var.SourceDir)\app.ico" />
+      </Component>
+
+      <!-- Трассировочный файл (отладка) -->
+      <Component Id="cm_pdb">
+        <File Source="$(var.SourceDir)\CheckMail.pdb" />
+      </Component>
+
+      <!-- Настройки по умолчанию (без паролей) — берутся из папки Installer, а не из Programm -->
+      <Component Id="cm_settings">
+        <File Source="$(var.SettingsFile)" />
+      </Component>
+
+      <!-- Резервная библиотека для runtimes (net8.0) — в подпапку runtimes\win\lib\net8.0\ как в оригинальной сборке -->
+      <Component Id="cm_runtimes" Guid="1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D">
+        <File Id="cm_runtimes_pkcs"
+              Source="$(var.SourceDir)\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Стандартный интерфейс установки (WixUI_InstallDir): выбор папки + финальное окно -->
+    <ui:WixUI Id="WixUI_InstallDir" />
+
+    <!-- Надпись в финальном окне -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="ApplicationFolderName" Value="CheckMail" />
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+
+    <!-- Обновление: удаляет предыдущие версии -->
+    <MajorUpgrade DowngradeErrorMessage="Более новая версия CheckMail уже установлена." />
+
+  </Package>
+
+</Wix>
